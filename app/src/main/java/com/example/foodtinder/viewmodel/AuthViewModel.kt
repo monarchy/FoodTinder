@@ -1,4 +1,4 @@
-package com.example.foodtinder
+package com.example.foodtinder.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
