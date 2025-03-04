@@ -2,6 +2,7 @@ package com.example.foodtinder.ui_screen
 
 // UserSelectionScreen.kt
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -28,7 +29,9 @@ import com.example.foodtinder.viewmodel.UserListViewModel
 
 
 @Composable
-fun UserSelectionScreen() {
+fun UserSelectionScreen(
+    onUserSelected: (String) -> Unit // Коллбэк для выбора пользователя
+) {
     val viewModel: UserListViewModel = viewModel()
     var selectedTab by remember { mutableStateOf("Контакты") }
 
@@ -55,7 +58,8 @@ fun UserSelectionScreen() {
                 UserItem(
                     user = user,
                     onFavoriteClick = { viewModel.toggleFavorite(user) },
-                    onAddFriendClick = { viewModel.addFriend(user) }
+                    onAddFriendClick = { viewModel.addFriend(user) },
+                    onUserSelected = { onUserSelected(user.id) } // Передаем коллбэк
                 )
             }
         }
@@ -66,7 +70,8 @@ fun UserSelectionScreen() {
 fun UserItem(
     user: User,
     onFavoriteClick: () -> Unit,
-    onAddFriendClick: () -> Unit
+    onAddFriendClick: () -> Unit,
+    onUserSelected: () -> Unit // Новый параметр для обработки кликов
 ) {
     // Кешируем текущее состояние пользователя
     var isFavorite by remember { mutableStateOf(user.isFavorite) }
@@ -75,7 +80,8 @@ fun UserItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(8.dp)
+            .clickable(onClick = onUserSelected), // Добавляем обработчик клика
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Аватар
@@ -95,8 +101,8 @@ fun UserItem(
 
         // Иконка "Избранное"
         IconButton(onClick = {
-            onFavoriteClick() // Обновляем состояние в ViewModel
-            isFavorite = !isFavorite // Обновляем локальное состояние
+            onFavoriteClick()
+            isFavorite = !isFavorite
         }) {
             Icon(
                 imageVector = Icons.Default.Favorite,
@@ -107,8 +113,8 @@ fun UserItem(
 
         // Иконка "Добавить в друзья"
         IconButton(onClick = {
-            onAddFriendClick() // Обновляем состояние в ViewModel
-            isFriend = true // Обновляем локальное состояние
+            onAddFriendClick()
+            isFriend = true
         }) {
             Icon(
                 imageVector = Icons.Default.PersonAdd,
