@@ -76,4 +76,9 @@ dependencies {
     implementation ("androidx.compose.material:material:1.7.8")
     implementation ("androidx.navigation:navigation-compose:2.8.8")
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // OkHttp для логирования запросов (опционально)
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.11.0")
 }

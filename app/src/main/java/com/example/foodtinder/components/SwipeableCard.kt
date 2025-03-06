@@ -119,7 +119,7 @@ fun SwipeableCard(
                 verticalArrangement = Arrangement.Center
             ) {
                 AsyncImage(
-                    model = dish.imageUrl,
+                    model = dish.image_url,
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()

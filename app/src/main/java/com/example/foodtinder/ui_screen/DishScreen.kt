@@ -13,16 +13,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.foodtinder.api.ApiClient
+import com.example.foodtinder.rep.DishRepository
 import com.example.foodtinder.viewmodel.DishViewModel
 
 @Composable
 fun DishScreen(userId: String) {
-    val viewModel: DishViewModel = viewModel()
+    val repository = remember { DishRepository(ApiClient.apiService) }
+    val viewModel = remember { DishViewModel(repository) }
+
+
+    val dishes by viewModel.dishes.collectAsState(emptyList())
     var currentDishIndex by remember { mutableStateOf(0) }
 
 
-    if (currentDishIndex < viewModel.dishes.size) {
-        val currentDish = viewModel.dishes[currentDishIndex]
+    if (currentDishIndex < dishes.size) {
+        val currentDish = dishes[currentDishIndex]
 
         Column(modifier = Modifier.fillMaxSize()) {
             // Карточка блюда
@@ -40,7 +46,7 @@ fun DishScreen(userId: String) {
                         viewModel.dislikeDish(currentDish)
                     },
                     onAnimationComplete = {
-                        currentDishIndex++ // Переходим к следующей карточке только после завершения анимации
+                        currentDishIndex++
                     }
                 )
             }
@@ -55,7 +61,7 @@ fun DishScreen(userId: String) {
                 IconButton(
                     onClick = {
                         viewModel.likeDish(currentDish)
-                        currentDishIndex++ // Переходим к следующей карточке
+                        currentDishIndex++
                     },
                     modifier = Modifier.size(64.dp)
                 ) {

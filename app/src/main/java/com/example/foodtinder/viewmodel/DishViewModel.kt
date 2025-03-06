@@ -1,24 +1,56 @@
 package com.example.foodtinder.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.foodtinder.data.Dish
+import com.example.foodtinder.rep.DishRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 
-class DishViewModel : ViewModel() {
-    private val _dishes = mutableListOf(
-        Dish("1", "Пицца", "Классическая итальянская пицца", "https://example.com/pizza.jpg"),
-        Dish("2", "Суши", "Японские суши с лососем", "https://example.com/sushi.jpg"),
-        Dish("3", "Паста", "Паста с томатным соусом", "https://example.com/pasta.jpg")
-    )
+class DishViewModel(private val repository: DishRepository) : ViewModel() {
 
-    // Функция для получения списка блюд
-    val dishes: List<Dish>
-        get() = _dishes
+    private val _dishes = MutableStateFlow<List<Dish>>(emptyList())
+    val dishes: StateFlow<List<Dish>> = _dishes
 
+    init {
+        loadDishes()
+    }
+
+    // Загрузка блюд из API
+    private fun loadDishes() {
+        viewModelScope.launch {
+            _dishes.value = repository.getDishes()
+        }
+    }
+
+    // Добавление нового блюда
+    fun addDish(dish: Dish) {
+        viewModelScope.launch {
+            repository.addDish(dish)?.let { newDish ->
+                val updatedDishes = _dishes.value.toMutableList()
+                updatedDishes.add(newDish)
+                _dishes.value = updatedDishes
+            }
+        }
+    }
+
+    // Удаление блюда
+    fun removeDish(id: Int) {
+        viewModelScope.launch {
+            repository.removeDish(id)
+            val updatedDishes = _dishes.value.filter { it.id != id.toString() }
+            _dishes.value = updatedDishes
+        }
+    }
+
+    // Обработка лайка
     fun likeDish(dish: Dish) {
         println("Лайкнули блюдо: ${dish.name}")
     }
 
+    // Обработка дизлайка
     fun dislikeDish(dish: Dish) {
         println("Дизлайкнули блюдо: ${dish.name}")
     }
