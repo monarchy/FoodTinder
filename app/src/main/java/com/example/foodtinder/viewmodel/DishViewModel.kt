@@ -18,7 +18,6 @@ class DishViewModel(private val repository: DishRepository) : ViewModel() {
         loadDishes()
     }
 
-    // Загрузка блюд из API
     private fun loadDishes() {
         viewModelScope.launch {
             _dishes.value = repository.getDishes()

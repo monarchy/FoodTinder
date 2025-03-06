@@ -87,7 +87,7 @@ fun AuthScreen() {
             is AuthState.Success -> {
                 Text(state.message, color = MaterialTheme.colorScheme.primary)
                 if (!isLoginMode && state.message == "Регистрация успешна") {
-                    isLoginMode = true // Переключаемся на форму входа
+                    isLoginMode = true
                 }
             }
 

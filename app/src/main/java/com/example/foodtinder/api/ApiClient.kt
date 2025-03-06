@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object ApiClient {
-    private const val BASE_URL = "https://foodtinderapi.novikov-sa.ru/" // Замените на URL вашего сервера
+    private const val BASE_URL = "https://foodtinderapi.novikov-sa.ru/"
 
     private val client = OkHttpClient.Builder()
         .connectTimeout(30, TimeUnit.SECONDS)
